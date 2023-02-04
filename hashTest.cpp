@@ -198,7 +198,7 @@ void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_
   free(input_a);
   free(input_b);
 }
-void testTree(size_t n) {
+void testTree() {
     ::system("mkdir -p testdb_testtree/ ; rm testdb_testtree/*.mdb");
     std::string dbDir = "testdb_testtree/";
 
