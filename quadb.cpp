@@ -1,3 +1,4 @@
+#include <optional>
 #include <stdlib.h> // getenv
 #include <unistd.h> // access, read
 #include <string.h> // strerror
