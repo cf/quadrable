@@ -23,6 +23,7 @@
 
 bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
+    std::cout << "length: " << slength << "\n";
     if (slength != 64) // must be even
         return NULL;
 
