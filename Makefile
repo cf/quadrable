@@ -11,7 +11,7 @@ $(error LIBOMP is not set, you need to install libomp-dev)
 endif
 
 LDLIBS   = -llmdb -lb2 -pthread
-LDFLAGS  =  -lpthread -lgmp -lstdc++ -lomp -lgmpxx -lbenchmark -L$(LIBOMP) -flto $(XLDFLAGS)
+LDFLAGS  =  -lpthread -lgmp -lstdc++ -lomp -lgmpxx -L$(LIBOMP) -flto $(XLDFLAGS)
 
 CHECK_SRCS = check.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
 SYNCBENCH_SRCS = syncBench.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
