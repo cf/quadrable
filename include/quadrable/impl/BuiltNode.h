@@ -29,11 +29,7 @@ class BuiltNode {
             unsigned char nullChar = 0;
 
             {
-                Hash h(sizeof(output.nodeHash.data));
-                h.update(keyHash.sv());
-                h.update(valHash.sv());
-                h.update(&nullChar, 1);
-                h.final(output.nodeHash.data);
+                hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
             }
         }
 
@@ -70,11 +66,7 @@ class BuiltNode {
             unsigned char nullChar = 0;
 
             {
-                Hash h(sizeof(output.nodeHash.data));
-                h.update(keyHash.sv());
-                h.update(valHash.sv());
-                h.update(&nullChar, 1);
-                h.final(output.nodeHash.data);
+                hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
             }
         }
 
@@ -95,10 +87,7 @@ class BuiltNode {
         BuiltNode output;
 
         {
-            Hash h(sizeof(output.nodeHash.data));
-            h.update(leftNode.nodeHash.data, sizeof(leftNode.nodeHash.data));
-            h.update(rightNode.nodeHash.data, sizeof(rightNode.nodeHash.data));
-            h.final(output.nodeHash.data);
+            hash_two_to_one_leaf(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;

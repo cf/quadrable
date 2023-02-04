@@ -21,7 +21,7 @@
 
 
 
-bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
+bool hex_string_to_buffer_b(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
     std::cout << "length: " << slength << "\n";
     if (slength != 64) // must be even
@@ -50,9 +50,9 @@ bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     }
     return true;
 }
-uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
+uint8_t * hex_string_to_buffer_b_alloc(std::string_view sv) {
     uint8_t* data = (uint8_t*)std::malloc(32);
-    if(hex_string_to_buffer(sv, data)){
+    if(hex_string_to_buffer_b(sv, data)){
       return data;
     }else{
       free(data);
@@ -134,11 +134,11 @@ void hash_two_to_one_b(const uint8_t * a,const  uint8_t * b, uint8_t * result){
 }
 void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * result){
 
-  uint8_t * input_a = hex_string_to_buffer_alloc(a);
+  uint8_t * input_a = hex_string_to_buffer_b_alloc(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  uint8_t * input_b = hex_string_to_buffer_alloc(b);
+  uint8_t * input_b = hex_string_to_buffer_b_alloc(b);
   if(input_b == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
@@ -186,11 +186,11 @@ void hash_two_to_one_b_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * 
 }
 void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_t * result){
 
-  uint8_t * input_a = hex_string_to_buffer_alloc(a);
+  uint8_t * input_a = hex_string_to_buffer_b_alloc(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  uint8_t * input_b = hex_string_to_buffer_alloc(b);
+  uint8_t * input_b = hex_string_to_buffer_b_alloc(b);
   if(input_b == NULL){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");

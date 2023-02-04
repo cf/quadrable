@@ -6,6 +6,100 @@
 namespace quadrable {
 
 
+
+bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
+    size_t slength = sv.length();
+    std::cout << "length: " << slength << "\n";
+    if (slength > 64 || (slength&1)==1) // must be even
+        return false;
+
+    size_t dlength = slength / 2;
+    std::memset(data, 0, dlength);
+    const char * str_data = sv.data();
+
+    size_t index = 0;
+    while (index < slength) {
+        char c = str_data[index];
+        int value = 0;
+        if (c >= '0' && c <= '9')
+            value = (c - '0');
+        else if (c >= 'A' && c <= 'F')
+            value = (10 + (c - 'A'));
+        else if (c >= 'a' && c <= 'f')
+            value = (10 + (c - 'a'));
+        else
+            return false;
+
+        data[(index / 2)] += value << (((index + 1) % 2) * 4);
+
+        index++;
+    }
+    return true;
+}
+void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+  const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
+  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
+  
+
+
+  Goldilocks::Element output[4];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+8] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash(output, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(output[i]);
+  }
+   std::memcpy(result, &output_data[0], 32);
+}
+void hash_two_to_one_leaf(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+  const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
+  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
+  Goldilocks::Element state[12];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  
+  input[8] = Goldilocks::fromU64(0);
+  input[9] = Goldilocks::fromU64(0);
+  input[10] = Goldilocks::fromU64(0);
+  input[11] = Goldilocks::fromU64(0);
+  for(int i=0;i<12;i++){
+    state[i] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash_full_result(state, input);
+  input[0] = Goldilocks::fromU64(1);
+  input[1] = Goldilocks::fromU64(1);
+  input[2] = Goldilocks::fromU64(0);
+  input[3] = Goldilocks::fromU64(1);
+  for(int i=4;i<12;i++){
+    input[i] = state[i];
+  }
+  for(int i=0;i<12;i++){
+    state[i] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash_full_result(state, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(state[i]);
+  }
+   std::memcpy(result, &output_data[0], 32);
+}
+
 class Hash {
   public:
     Hash(size_t outputSize_) : outputSize(outputSize_) {
@@ -40,9 +134,9 @@ class Key {
         Key k;
 
         {
-            Hash h(sizeof(k.data));
-            h.update(s);
-            h.final(k.data);
+            if(!hex_string_to_buffer(s, k.data)){
+                throw new std::runtime_error("invalid value for key");
+            }
         }
 
         return k;
