@@ -1,3 +1,20 @@
+
+constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+static std::string buffer_to_hex_string_2(uint8_t * data, int len)
+{
+  std::string s(len * 2, ' ');
+  for (int i = 0; i < len; ++i) {
+    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
+    s[2 * i + 1] = hexmap[data[i] & 0x0F];
+  }
+  return s;
+}
+static void printHash(uint8_t * a, uint8_t * b, uint8_t * c) {
+    std::cout << "hash("<<buffer_to_hex_string_2(a, 32) << ", "<<buffer_to_hex_string_2(b, 32) << ") = "<<buffer_to_hex_string_2(c, 32) <<"\n";
+
+}
 public:
 
 class BuiltNode {
@@ -39,6 +56,7 @@ class BuiltNode {
 
             hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
             }
+            printHash(keyHash.data, valHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;
@@ -83,6 +101,7 @@ class BuiltNode {
 
             hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
             }
+            printHash(keyHash.data, valHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;
@@ -109,6 +128,7 @@ class BuiltNode {
             h.final(output.nodeHash.data);*/
             hash_two_to_one(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
+            printHash(leftNode.NodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
 
         std::string nodeRaw;
 
