@@ -2,13 +2,13 @@
 
 #include "blake2.h"
 
-#include "goldilocks/goldilocks_base_field.hpp"
+#include "../../goldilocks/goldilocks_base_field.hpp"
 
-#include "goldilocks/goldilocks_base_field.hpp"
-#include "goldilocks/goldilocks_base_field_avx.hpp"
-#include "goldilocks/poseidon_goldilocks.hpp"
-#include "goldilocks/poseidon_goldilocks_avx.hpp"
-#include "goldilocks/ntt_goldilocks.hpp"
+#include "../../goldilocks/goldilocks_base_field.hpp"
+#include "../../goldilocks/goldilocks_base_field_avx.hpp"
+#include "../../goldilocks/poseidon_goldilocks.hpp"
+#include "../../goldilocks/poseidon_goldilocks_avx.hpp"
+#include "../../goldilocks/ntt_goldilocks.hpp"
 
 
 namespace quadrable {
