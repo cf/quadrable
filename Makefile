@@ -15,13 +15,15 @@ LDFLAGS  =  -lpthread -lgmp -lstdc++ -lomp -lgmpxx -L$(LIBOMP) -flto $(XLDFLAGS)
 
 CHECK_SRCS = check.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
 SYNCBENCH_SRCS = syncBench.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
+HASHTEST_SRCS = hashTest.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
 TOOL_SRCS  = quadb.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
 
 
 CHECK_OBJS := $(CHECK_SRCS:.cpp=.o)
 TOOL_OBJS  := $(TOOL_SRCS:.cpp=.o)
 SYNCBENCH_OBJS := $(SYNCBENCH_SRCS:.cpp=.o)
-DEPS       := $(CHECK_SRCS:.cpp=.d) $(TOOL_SRCS:.cpp=.d) $(SYNCBENCH_SRCS:.cpp=.d)
+HASHTEST_OBJS := $(HASHTEST_SRCS:.cpp=.o)
+DEPS       := $(CHECK_SRCS:.cpp=.d) $(TOOL_SRCS:.cpp=.d) $(SYNCBENCH_SRCS:.cpp=.d) $(HASHTEST_SRCS:.cpp=.d)
 
 
 .PHONY: phony
@@ -33,6 +35,9 @@ check: $(CHECK_OBJS) $(DEPS)
 
 syncBench: $(SYNCBENCH_OBJS) $(DEPS)
 	$(CXX) $(SYNCBENCH_OBJS) $(LDFLAGS) $(LDLIBS) -o $@
+
+hashTest: $(HASHTEST_OBJS) $(DEPS)
+	$(CXX) $(HASHTEST_OBJS) $(LDFLAGS) $(LDLIBS) -o $@
 
 quadb: $(TOOL_OBJS) $(DEPS)
 	$(CXX) $(TOOL_OBJS) $(LDFLAGS) $(LDLIBS) -o $@
