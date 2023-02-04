@@ -1,4 +1,4 @@
-W        = -Wall -pthread -fopenmp
+W        = -Wall -pthread -fopenmp -mavx2
 OPT      = -O2 -g
 STD      = -std=c++17
 CXXFLAGS = $(STD) $(OPT) $(W) -fPIC $(XCXXFLAGS)
