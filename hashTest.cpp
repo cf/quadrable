@@ -13,6 +13,11 @@
 
 #include "goldilocks/goldilocks_base_field.hpp"
 
+#include "goldilocks/goldilocks_base_field.hpp"
+#include "goldilocks/goldilocks_base_field_avx.hpp"
+#include "goldilocks/poseidon_goldilocks.hpp"
+#include "goldilocks/poseidon_goldilocks_avx.hpp"
+#include "goldilocks/ntt_goldilocks.hpp"
 
 
 namespace quadrable {
@@ -23,6 +28,20 @@ void testPoseidon() {
     Goldilocks::Element c = Goldilocks::fromString("6277101731002175852863927769280199145829365870197997568000");
 
     std::cout << Goldilocks::toString(a) << " " << b << " " << Goldilocks::toString(c) << "\n";
+
+
+    Goldilocks::Element output[4];
+    Goldilocks::Element input[12];
+    for (int i = 0; i < 12; i++)
+    {
+        input[i] = Goldilocks::fromU64(0);
+    }
+    input[0] = Goldilocks::fromU64(1);
+    input[4] = Goldilocks::fromU64(2);
+    PoseidonGoldilocks::hash(&output, &input);
+    for(int i=0;i<4;i++){
+      std::cout << "result" << Goldilocks::toString(output[i]) << "\n";
+    }
 
 }
 
