@@ -169,7 +169,7 @@ class Key {
         Key k;
 
 
-        if (length > sizeof(h.data)){
+        if (length > sizeof(k.data)){
             throw quaderr("size to large for length");
         }
 
