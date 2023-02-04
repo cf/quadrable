@@ -168,7 +168,7 @@ void run(int argc, char **argv) {
 
         auto changes = db.change();
 
-        if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoi(k)), v);
+        if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoull(k)), v);
         else changes.put(k, v);
 
         changes.apply(txn);
@@ -184,7 +184,7 @@ void run(int argc, char **argv) {
         std::string k = args["<key>"].asString();
         std::string_view v;
 
-        bool found = args["--int"].asBool()?db.get(txn, quadrable::Key::fromInteger(std::stoi(k)).sv(), v):db.get(txn, k, v);
+        bool found = args["--int"].asBool()?db.get(txn, quadrable::Key::fromInteger(std::stoull(k)).sv(), v):db.get(txn, k, v);
 
         if (!found) throw quaderr("key not found in db");
         std::cout << v << std::endl;
@@ -274,7 +274,7 @@ void run(int argc, char **argv) {
             if (delimOffset == std::string::npos) throw quaderr("couldn't find separator in input line");
             auto k = line.substr(0, delimOffset);
             auto v = line.substr(delimOffset + sep.size());
-            if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoi(k)), v);
+            if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoull(k)), v);
             else changes.put(k, v);
         }
 
@@ -391,7 +391,7 @@ void run(int argc, char **argv) {
             std::vector<quadrable::Key> keys;
 
             for (auto &key : keysOrig) {
-                keys.push_back(quadrable::Key::fromInteger(std::stoi(key)));
+                keys.push_back(quadrable::Key::fromInteger(std::stoull(key)));
             }
 
             proof = db.exportProofRaw(txn, keys);
