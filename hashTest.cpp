@@ -25,7 +25,7 @@ bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
     std::cout << "length: " << slength << "\n";
     if (slength != 64) // must be even
-        return NULL;
+        return false;
 
     size_t dlength = slength / 2;
     std::memset(data, 0, dlength);
@@ -42,12 +42,13 @@ bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
         else if (c >= 'a' && c <= 'f')
             value = (10 + (c - 'a'));
         else
-            return NULL;
+            return false;
 
         data[(index / 2)] += value << (((index + 1) % 2) * 4);
 
         index++;
     }
+    return true;
 }
 uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
     uint8_t* data = (uint8_t*)std::malloc(32);
