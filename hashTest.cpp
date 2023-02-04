@@ -165,7 +165,7 @@ void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * re
   for(int i=0;i<12;i++){
     state[i] =  Goldilocks::fromU64(0);
   }
-  PoseidonGoldilocks::hash_full_result_seq(state, input);
+  PoseidonGoldilocks::hash_full_result(state, input);
   input[0] = Goldilocks::fromU64(1);
   input[1] = Goldilocks::fromU64(1);
   input[2] = Goldilocks::fromU64(0);
@@ -176,7 +176,7 @@ void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * re
   for(int i=0;i<12;i++){
     state[i] =  Goldilocks::fromU64(0);
   }
-  PoseidonGoldilocks::hash_full_result_seq(state, input);
+  PoseidonGoldilocks::hash_full_result(state, input);
   uint64_t output_data[4];
 
   for(int i=0;i<4;i++){
