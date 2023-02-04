@@ -184,7 +184,7 @@ void run(int argc, char **argv) {
         std::string k = args["<key>"].asString();
         std::string_view v;
 
-        bool found = args["--int"].asBool()?db.get(txn, quadrable::Key::fromInteger(std::stoi(k)), v):db.get(txn, k, v);
+        bool found = args["--int"].asBool()?db.get(txn, quadrable::Key::fromInteger(std::stoi(k)).sv(), v):db.get(txn, k, v);
 
         if (!found) throw quaderr("key not found in db");
         std::cout << v << std::endl;
