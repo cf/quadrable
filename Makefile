@@ -2,7 +2,7 @@ W        = -Wall -pthread -fopenmp
 OPT      = -O2 -g
 STD      = -std=c++17
 CXXFLAGS = $(STD) $(OPT) $(W) -fPIC $(XCXXFLAGS)
-INCS     = -Iinclude -Iexternal -Iexternal/hoytech-cpp -Iexternal/docopt.cpp
+INCS     = -Iinclude -Iexternal -Iexternal/hoytech-cpp -Iexternal/docopt.cpp -Igoldilocks
 
 
 LIBOMP := $(shell find /usr/lib/llvm-* -name "libomp.so" | sed 's/libomp.so//')
@@ -13,9 +13,9 @@ endif
 LDLIBS   = -llmdb -lb2 -pthread
 LDFLAGS  =  -lpthread -lgmp -lstdc++ -lomp -lgmpxx -lbenchmark -L$(LIBOMP) -flto $(XLDFLAGS)
 
-CHECK_SRCS = check.cpp
-SYNCBENCH_SRCS = syncBench.cpp
-TOOL_SRCS  = quadb.cpp
+CHECK_SRCS = check.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
+SYNCBENCH_SRCS = syncBench.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
+TOOL_SRCS  = quadb.cpp goldilocks/goldilocks_base_field.cpp goldilocks/goldilocks_cubic_extension.cpp goldilocks/ntt_goldilocks.cpp goldilocks/poseidon_goldilocks.cpp
 
 
 CHECK_OBJS := $(CHECK_SRCS:.cpp=.o)
