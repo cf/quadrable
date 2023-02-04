@@ -148,7 +148,7 @@ class Hash {
 constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-std::string hexStr(unsigned uint8_t *data, int len)
+std::string hexStr(uint8_t * data, int len)
 {
   std::string s(len * 2, ' ');
   for (int i = 0; i < len; ++i) {
