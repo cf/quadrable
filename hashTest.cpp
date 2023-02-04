@@ -21,15 +21,6 @@
 
 
 
-uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
-    uint8_t* data = (uint8_t*)std::malloc(32);
-    if(hex_string_to_buffer(sv, data)){
-      return data;
-    }else{
-      free(data);
-      return NULL;
-    }
-}
 bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
@@ -55,6 +46,15 @@ bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
         data[(index / 2)] += value << (((index + 1) % 2) * 4);
 
         index++;
+    }
+}
+uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
+    uint8_t* data = (uint8_t*)std::malloc(32);
+    if(hex_string_to_buffer(sv, data)){
+      return data;
+    }else{
+      free(data);
+      return NULL;
     }
 }
 constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
