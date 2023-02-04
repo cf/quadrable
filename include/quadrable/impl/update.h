@@ -1,5 +1,5 @@
 
-bool hex_string_to_buffer_c(std::string_view sv, uint8_t * data) {
+static bool hex_string_to_buffer_c(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
         return false;
