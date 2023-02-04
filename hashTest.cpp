@@ -163,8 +163,8 @@ void testPoseidon() {
       std::cout << "h1 result: " << Goldilocks::toString(output[i]) << "\n";
     }
     uint8_t test_out[32];
-    std::string_view hex_a { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f4" };
-    std::string_view hex_b { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5" };
+    std::string_view hex_a { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5" };
+    std::string_view hex_b { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f4" };
     hash_hex_two_to_one(hex_a, hex_b, &test_out[0]);
     std::cout << "hex result: " << buffer_to_hex_string(&test_out[0], 32) << "\n";
 
