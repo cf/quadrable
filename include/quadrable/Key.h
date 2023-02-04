@@ -143,7 +143,8 @@ class Key {
 
         {
             if(!hex_string_to_buffer(s, k.data)){
-                throw new std::runtime_error("invalid value for key");
+                
+                throw new quaderr("invalid value for key");
             }
         }
 
