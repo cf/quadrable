@@ -127,11 +127,11 @@ void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t *
 }
 void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * result){
 
-  const uint8_t * input_a = hex_str_to_uint8(a);
+  uint8_t * input_a = hex_str_to_uint8(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  const uint8_t * input_b = hex_str_to_uint8(a);
+  uint8_t * input_b = hex_str_to_uint8(a);
   if(input_b == NULL){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
