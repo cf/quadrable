@@ -103,7 +103,7 @@ std::string hexStr(uint8_t * data, int len)
 }
 namespace quadrable {
 
-void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t * output){
+void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t * result){
 
 
   Goldilocks::Element output[4];
@@ -123,7 +123,7 @@ void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t *
   for(int i=0;i<4;i++){
     output_data[i] = Goldilocks::toU64(output[i]);
   }
-   std::memcpy(output, &output_data[0], 32);
+   std::memcpy(result, &output_data[0], 32);
 }
 void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * result){
 
