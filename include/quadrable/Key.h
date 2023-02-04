@@ -142,7 +142,10 @@ class Key {
         Key k;
 
         {
-            if(!hex_string_to_buffer(s, k.data)){
+            if(sizeof(k.data) >= sv.length()){
+                std::memset(k.data, 0, sizeof(k.data));
+                std::memcpy(k.data, sv.data(), sv.length());
+            }else{
                 Hash h(sizeof(k.data));
                 h.update(s);
                 h.final(k.data);
