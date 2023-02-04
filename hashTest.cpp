@@ -55,7 +55,7 @@ uint8_t* hex_str_to_uint8(const char* string) {
 
     return data;
 }
-void hash_two_to_one(const uint8_t * input_a,const  uint_t * input_b, uint8_t * output){
+void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t * output){
 
 
   Goldilocks::Element output[4];
