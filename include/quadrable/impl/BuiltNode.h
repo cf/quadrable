@@ -11,8 +11,8 @@ static std::string buffer_to_hex_string_2(const uint8_t * data, int len)
   }
   return s;
 }
-static void printHash(const uint8_t * a, const uint8_t * b, const uint8_t * c) {
-    std::cout << "hash("<<buffer_to_hex_string_2(a, 32) << ", "<<buffer_to_hex_string_2(b, 32) << ") = "<<buffer_to_hex_string_2(c, 32) <<"\n";
+static void printHash(const char * prefix, const uint8_t * a, const uint8_t * b, const uint8_t * c) {
+    std::cout << "[" << prefix <<"] "<< "hash("<<buffer_to_hex_string_2(a, 32) << ", "<<buffer_to_hex_string_2(b, 32) << ") = "<<buffer_to_hex_string_2(c, 32) <<"\n";
 
 }
 public:
@@ -55,8 +55,8 @@ class BuiltNode {
                 */
 
             hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
+            printHash("newLeaf", keyHash.data, valHash.data, output.nodeHash.data);
             }
-            printHash(keyHash.data, valHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;
@@ -100,8 +100,8 @@ class BuiltNode {
                 h.final(output.nodeHash.data);*/
 
             hash_two_to_one_leaf(keyHash.data, valHash.data, output.nodeHash.data);
+            printHash("newWitnessLeaf", keyHash.data, valHash.data, output.nodeHash.data);
             }
-            printHash(keyHash.data, valHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;
@@ -129,6 +129,7 @@ class BuiltNode {
             hash_two_to_one(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
             printHash(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
+            printHash("newBranch", keyHash.data, valHash.data, output.nodeHash.data);
 
         std::string nodeRaw;
 
