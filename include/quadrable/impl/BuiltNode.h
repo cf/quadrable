@@ -126,7 +126,7 @@ class BuiltNode {
             h.update(leftNode.nodeHash.data, sizeof(leftNode.nodeHash.data));
             h.update(rightNode.nodeHash.data, sizeof(rightNode.nodeHash.data));
             h.final(output.nodeHash.data);*/
-            hash_two_to_one(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
+            hash_two_to_one_zero_mode(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
             printHash("newBranch",leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
 

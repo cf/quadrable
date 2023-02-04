@@ -70,6 +70,38 @@ void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   }
    std::memcpy(result, &output_data[0], 32);
 }
+void hash_two_to_one_zero_mode(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+  const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
+  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
+  if(input_a[0]==0&&input_a[1]==0&&input_a[2]==0&&input_a[3]==0){
+   std::memcpy(result, ((const uint8_t *)input_b), 32);
+   return;
+  }else if(input_b[0]==0&&input_b[1]==0&&input_b[2]==0&&input_b[3]==0){
+   std::memcpy(result, ((const uint8_t *)input_a), 32);
+   return;
+  }
+  
+
+
+  Goldilocks::Element output[4];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+8] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash(output, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(output[i]);
+  }
+   std::memcpy(result, &output_data[0], 32);
+}
 void hash_two_to_one_leaf(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
   const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
