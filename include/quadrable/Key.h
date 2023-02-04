@@ -144,7 +144,7 @@ class Key {
         {
             if(!hex_string_to_buffer(s, k.data)){
                 
-                throw new quaderr("invalid value for key");
+                throw quaderr("invalid value for key");
             }
         }
 
