@@ -2,7 +2,7 @@
 constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-static std::string buffer_to_hex_string_2(uint8_t * data, int len)
+static std::string buffer_to_hex_string_2(const uint8_t * data, int len)
 {
   std::string s(len * 2, ' ');
   for (int i = 0; i < len; ++i) {
@@ -11,7 +11,7 @@ static std::string buffer_to_hex_string_2(uint8_t * data, int len)
   }
   return s;
 }
-static void printHash(uint8_t * a, uint8_t * b, uint8_t * c) {
+static void printHash(const uint8_t * a, const uint8_t * b, const uint8_t * c) {
     std::cout << "hash("<<buffer_to_hex_string_2(a, 32) << ", "<<buffer_to_hex_string_2(b, 32) << ") = "<<buffer_to_hex_string_2(c, 32) <<"\n";
 
 }
