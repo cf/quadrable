@@ -30,7 +30,7 @@ uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
       return NULL;
     }
 }
-bool hex_string_to_buffer(std::string_view sv, const uint8_t * data) {
+bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
         return NULL;
