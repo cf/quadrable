@@ -125,7 +125,7 @@ void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t *
   }
    std::memcpy(output, &output_data[0], 32);
 }
-void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * output){
+void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * result){
 
   const uint8_t * input_a = hex_str_to_uint8(a);
   if(input_a == NULL){
@@ -136,28 +136,9 @@ void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * output){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
   }
-  hash_two_to_one(input_a, input_b, output)
-
-  Goldilocks::Element output[4];
-  Goldilocks::Element input[12];
-  for(int i=0;i<4;i++){
-    input[i] =  Goldilocks::fromU64(input_a[i]);
-  }
-  for(int i=0;i<4;i++){
-    input[i+4] =  Goldilocks::fromU64(input_b[i]);
-  }
+  hash_two_to_one(input_a, input_b, result);
   free(input_a);
   free(input_b);
-  for(int i=0;i<4;i++){
-    input[i+8] =  Goldilocks::fromU64(0);
-  }
-  PoseidonGoldilocks::hash(output, input);
-  uint64_t output_data[4];
-
-  for(int i=0;i<4;i++){
-    output_data[i] = Goldilocks::toU64(output[i]);
-  }
-   std::memcpy(output, &output_data[0], 32);
 }
 void testPoseidon() {
 
