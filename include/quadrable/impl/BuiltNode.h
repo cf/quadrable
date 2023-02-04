@@ -128,7 +128,7 @@ class BuiltNode {
             h.final(output.nodeHash.data);*/
             hash_two_to_one(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
-            printHash(leftNode.NodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
+            printHash(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
 
         std::string nodeRaw;
 
