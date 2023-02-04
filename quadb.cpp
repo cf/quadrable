@@ -162,12 +162,14 @@ void run(int argc, char **argv) {
     } else if (args["dumpTree"].asBool()) {
         quadrable::dumpDb(db, txn);
     } else if (args["put"].asBool()) {
+
         std::string k = args["<key>"].asString();
         std::string v = args["<val>"].asString();
 
         auto changes = db.change();
 
-        changes.put(k, v);
+        if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoi(k)), v);
+        else changes.put(k, v);
 
         changes.apply(txn);
     } else if (args["del"].asBool()) {
