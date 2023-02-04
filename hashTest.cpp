@@ -31,10 +31,11 @@ uint8_t* hex_string_to_buffer(std::string_view sv) {
     uint8_t* data = (uint8_t*)std::malloc(dlength);
 
     std::memset(data, 0, dlength);
+    const char * str_data = sv.data();
 
     size_t index = 0;
     while (index < slength) {
-        char c = string[index];
+        char c = str_data[index];
         int value = 0;
         if (c >= '0' && c <= '9')
             value = (c - '0');
