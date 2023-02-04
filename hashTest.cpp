@@ -21,11 +21,8 @@
 
 
 
-uint8_t* hex_string_to_buffer(const char* string, size_t slength) {
-
-    if (string == NULL)
-        return NULL;
-
+uint8_t* hex_string_to_buffer(std::string_view sv,) {
+    size_t slength = sv.length();
     if (slength != 64) // must be even
         return NULL;
 
@@ -128,13 +125,13 @@ void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   }
    std::memcpy(result, &output_data[0], 32);
 }
-void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * result){
+void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * result){
 
   uint8_t * input_a = hex_string_to_buffer(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  uint8_t * input_b = hex_string_to_buffer(a);
+  uint8_t * input_b = hex_string_to_buffer(b);
   if(input_b == NULL){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
@@ -165,7 +162,9 @@ void testPoseidon() {
       std::cout << "h1 result: " << Goldilocks::toString(output[i]) << "\n";
     }
     uint8_t test_out[32];
-    hash_hex_two_to_one("442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", &test_out[0]);
+    std::string_view hex_a { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5" };
+    std::string_view hex_b { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5" };
+    hash_hex_two_to_one(hex_a, hex_b, &test_out[0]);
     std::cout << "hex result: " << buffer_to_hex_string(&test_out[0], 32) << "\n";
 
 
