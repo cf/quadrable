@@ -55,6 +55,54 @@ uint8_t* hex_str_to_uint8(const char* string) {
 
     return data;
 }
+
+/*
+class Hash {
+  public:
+    Hash(size_t outputSize_) : outputSize(outputSize_) {
+        blake2s_init(&s, outputSize);
+    }
+
+    void update(std::string_view sv) {
+        if sv.length() == 32 {
+        update(&s, reinterpret_cast<const uint8_t*>(sv.data()));
+        }else if sv.length() == 64{
+            const uint_8_t * data = hex_str_to_uint8(reinterpret_cast<const char*>(sv.data()));
+            update(data, 32);
+            free(data);
+        }else{
+            throw std::runtime_error("invalid string key");
+        }
+    }
+
+    void update(const uint8_t *input, size_t length) {
+        blake2s_update(&s, input, length);
+    }
+
+    void final(uint8_t *output) {
+        blake2s_final(&s, output, outputSize);
+    }
+
+  private:
+    blake2s_state s;
+    size_t outputSize;
+
+};
+*/
+constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+std::string hexStr(uint8_t * data, int len)
+{
+  std::string s(len * 2, ' ');
+  for (int i = 0; i < len; ++i) {
+    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
+    s[2 * i + 1] = hexmap[data[i] & 0x0F];
+  }
+  return s;
+}
+namespace quadrable {
+
 void hash_two_to_one(const uint8_t * input_a,const  uint8_t * input_b, uint8_t * output){
 
 
@@ -111,53 +159,6 @@ void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * output){
   }
    std::memcpy(output, &output_data[0], 32);
 }
-
-/*
-class Hash {
-  public:
-    Hash(size_t outputSize_) : outputSize(outputSize_) {
-        blake2s_init(&s, outputSize);
-    }
-
-    void update(std::string_view sv) {
-        if sv.length() == 32 {
-        update(&s, reinterpret_cast<const uint8_t*>(sv.data()));
-        }else if sv.length() == 64{
-            const uint_8_t * data = hex_str_to_uint8(reinterpret_cast<const char*>(sv.data()));
-            update(data, 32);
-            free(data);
-        }else{
-            throw std::runtime_error("invalid string key");
-        }
-    }
-
-    void update(const uint8_t *input, size_t length) {
-        blake2s_update(&s, input, length);
-    }
-
-    void final(uint8_t *output) {
-        blake2s_final(&s, output, outputSize);
-    }
-
-  private:
-    blake2s_state s;
-    size_t outputSize;
-
-};
-*/
-constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-std::string hexStr(uint8_t * data, int len)
-{
-  std::string s(len * 2, ' ');
-  for (int i = 0; i < len; ++i) {
-    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
-    s[2 * i + 1] = hexmap[data[i] & 0x0F];
-  }
-  return s;
-}
-namespace quadrable {
 void testPoseidon() {
 
     Goldilocks::Element a = Goldilocks::fromU64(0xFFFFFFFF00000005ULL);
