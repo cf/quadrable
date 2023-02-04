@@ -1,11 +1,17 @@
-W        = -Wall
+W        = -Wall -pthread -fopenmp
 OPT      = -O2 -g
 STD      = -std=c++17
 CXXFLAGS = $(STD) $(OPT) $(W) -fPIC $(XCXXFLAGS)
 INCS     = -Iinclude -Iexternal -Iexternal/hoytech-cpp -Iexternal/docopt.cpp
 
+
+LIBOMP := $(shell find /usr/lib/llvm-* -name "libomp.so" | sed 's/libomp.so//')
+ifndef LIBOMP
+$(error LIBOMP is not set, you need to install libomp-dev)
+endif
+
 LDLIBS   = -llmdb -lb2 -pthread
-LDFLAGS  = -flto $(XLDFLAGS)
+LDFLAGS  =  -lpthread -lgmp -lstdc++ -lomp -lgmpxx -lbenchmark -L$(LIBOMP) -flto $(XLDFLAGS)
 
 CHECK_SRCS = check.cpp
 SYNCBENCH_SRCS = syncBench.cpp
