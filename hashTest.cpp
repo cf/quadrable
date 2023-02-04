@@ -107,7 +107,7 @@ class Hash {
 */
 namespace quadrable {
 
-void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+void hash_two_to_one_b(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
   const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
   
@@ -142,11 +142,11 @@ void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * resul
   if(input_b == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  hash_two_to_one(input_a, input_b, result);
+  hash_two_to_one_b(input_a, input_b, result);
   free(input_a);
   free(input_b);
 }
-void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+void hash_two_to_one_b_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
   const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
   Goldilocks::Element state[12];
@@ -195,7 +195,7 @@ void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
   }
-  hash_two_to_one_with_pad(input_a, input_b, result);
+  hash_two_to_one_b_with_pad(input_a, input_b, result);
   free(input_a);
   free(input_b);
 }
