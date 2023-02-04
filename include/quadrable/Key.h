@@ -142,10 +142,11 @@ class Key {
         Key k;
 
         {
-            //if(hex_string_to_buffer())
-            Hash h(sizeof(k.data));
-            h.update(s);
-            h.final(k.data);
+            if(!hex_string_to_buffer(s, k.data)){
+                Hash h(sizeof(k.data));
+                h.update(s);
+                h.final(k.data);
+            }
         }
 
         return k;
