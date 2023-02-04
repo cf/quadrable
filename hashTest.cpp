@@ -167,13 +167,13 @@ void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * re
   }
    std::memcpy(result, &output_data[0], 32);
 }
-void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * result){
+void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_t * result){
 
-  uint8_t * input_a = hex_string_to_buffer(a);
+  uint8_t * input_a = hex_string_to_buffer_alloc(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  uint8_t * input_b = hex_string_to_buffer(b);
+  uint8_t * input_b = hex_string_to_buffer_alloc(b);
   if(input_b == NULL){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
