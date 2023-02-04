@@ -103,7 +103,7 @@ namespace quadrable {
 
 void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
-  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(a);
+  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
   
 
 
