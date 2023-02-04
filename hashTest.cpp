@@ -275,6 +275,7 @@ template <typename I> std::string n2hexstr(I w, size_t hex_len = sizeof(I)<<1) {
 
 void doIt() {
   testPoseidon();
+  testTree();
   
     ::system("mkdir -p testdb/ ; rm testdb/*.mdb");
     std::string dbDir = "testdb/";
