@@ -183,15 +183,8 @@ void run(int argc, char **argv) {
     } else if (args["get"].asBool()) {
         std::string k = args["<key>"].asString();
         std::string_view v;
-        bool int_mode = args["--int"].asBool();
-        if(int_mode)
-            std::cout << "int mode\n";
-        }else{
-            std::cout << "string mode\n";
 
-        }
-
-        bool found = int_mode?db.get(txn, quadrable::Key::fromInteger(std::stoi(k)), v):db.get(txn, k, v);
+        bool found = args["--int"].asBool()?db.get(txn, quadrable::Key::fromInteger(std::stoi(k)), v):db.get(txn, k, v);
 
         if (!found) throw quaderr("key not found in db");
         std::cout << v << std::endl;
