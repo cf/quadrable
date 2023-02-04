@@ -142,9 +142,9 @@ class Key {
         Key k;
 
         {
-            if(sizeof(k.data) >= sv.length()){
+            if(sizeof(k.data) >= s.length()){
                 std::memset(k.data, 0, sizeof(k.data));
-                std::memcpy(k.data, sv.data(), sv.length());
+                std::memcpy(k.data, s.data(), s.length());
             }else{
                 Hash h(sizeof(k.data));
                 h.update(s);
