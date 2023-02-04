@@ -45,6 +45,7 @@ R"(
       quadb [options] importProof [--root=<root>] [--hex] [--dump]
       quadb [options] mergeProof [--hex]
       quadb [options] dumpTree
+      quadb [options] dumpTreeHex
       quadb [options] mineHash <prefix>
 
     Options:
@@ -162,6 +163,8 @@ void run(int argc, char **argv) {
         // Do nothing
     } else if (args["dumpTree"].asBool()) {
         quadrable::dumpDb(db, txn);
+    } else if (args["dumpTreeHex"].asBool()) {
+        quadrable::dumpDbHex(db, txn);
     } else if (args["put"].asBool()) {
 
         std::string k = args["<key>"].asString();

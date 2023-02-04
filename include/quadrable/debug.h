@@ -69,11 +69,62 @@ inline void dumpDbAux(quadrable::Quadrable &db, lmdb::txn &txn, uint64_t nodeId,
     }
 }
 
+inline void dumpDbAuxHex(quadrable::Quadrable &db, lmdb::txn &txn, uint64_t nodeId, size_t depth) {
+    Quadrable::ParsedNode node(&db, txn, nodeId);
+
+    std::cout << std::string(depth*2, ' '); 
+
+    std::cout << renderNode(db, txn, node, 8) << " ";
+
+    if (node.nodeType == quadrable::NodeType::Empty) {
+        std::cout << "empty";
+        std::cout << "\n";
+    } else if (node.nodeType == quadrable::NodeType::Leaf) {
+        std::cout << "leaf: ";
+
+        std::string_view leafKey;
+        /*
+        if (db.getLeafKey(txn, node.nodeId, leafKey)) {
+            std::cout << leafKey;
+        } else {
+            std::cout << renderUnknown(node.leafKeyHash());
+        }*/
+        std::cout << to_hex(node.leafKeyHash(), true);
+
+        std::cout << " = " << to_hex(node.leafValHash(), false);
+
+        std::cout << "\n";
+    } else if (node.nodeType == quadrable::NodeType::WitnessLeaf) {
+        std::cout << "witness leaf: " << to_hex(node.leafKeyHash(), true) << " hash(val) = " << to_hex(node.leafValHash(), false);
+        std::cout << "\n";
+    } else if (node.nodeType == quadrable::NodeType::Witness) {
+        std::cout << "witness";
+        std::cout << "\n";
+    } else {
+        std::cout << "branch:";
+        std::cout << "\n";
+
+        dumpDbAuxHex(db, txn, node.leftNodeId, depth+1);
+        dumpDbAuxHex(db, txn, node.rightNodeId, depth+1);
+    }
+}
+
 inline void dumpDb(quadrable::Quadrable &db, lmdb::txn &txn) {
     std::cout << "-----------------\n";
     uint64_t nodeId = db.getHeadNodeId(txn);
 
     dumpDbAux(db, txn, nodeId, 0);
+
+    std::cout << "-----------------\n";
+
+    std::cout << std::flush;
+}
+
+inline void dumpDbHex(quadrable::Quadrable &db, lmdb::txn &txn) {
+    std::cout << "-----------------\n";
+    uint64_t nodeId = db.getHeadNodeId(txn);
+
+    dumpDbAuxHex(db, txn, nodeId, 0);
 
     std::cout << "-----------------\n";
 
