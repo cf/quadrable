@@ -21,13 +21,16 @@
 
 
 
-char * hex_string_to_buffer_alloc(std::string_view sv) {
-    char* data = (char*)std::malloc(32);
-    hex_string_to_buffer(sv, data)
-
-    return data;
+uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
+    uint8_t* data = (char*)std::malloc(32);
+    if(hex_string_to_buffer(sv, data)){
+      return data;
+    }else{
+      free(data);
+      return NULL;
+    }
 }
-void hex_string_to_buffer(std::string_view sv, const char * data) {
+bool hex_string_to_buffer(std::string_view sv, const uint8_t * data) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
         return NULL;
@@ -135,7 +138,6 @@ void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * resul
   }
   uint8_t * input_b = hex_string_to_buffer_alloc(b);
   if(input_b == NULL){
-    free(input_a);
     throw std::runtime_error("invalid hex string key!");
   }
   hash_two_to_one(input_a, input_b, result);
