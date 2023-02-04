@@ -54,7 +54,7 @@ class UpdateSet {
         return *this;
     }
     UpdateSet &putBytes(uint8_t * key, uint8_t * value, uint64_t *outputNodeId = nullptr) {
-        map.insert_or_assign(Key::fromBytes(k), Update{"", std::string((const char *)value, 32), false, outputNodeId});
+        map.insert_or_assign(Key::fromBytes(key), Update{"", std::string((const char *)value, 32), false, outputNodeId});
         return *this;
     }
     UpdateSet &putHex(std::string_view key, std::string_view value, uint64_t *outputNodeId = nullptr) {
