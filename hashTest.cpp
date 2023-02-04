@@ -22,7 +22,7 @@
 
 
 uint8_t * hex_string_to_buffer_alloc(std::string_view sv) {
-    uint8_t* data = (char*)std::malloc(32);
+    uint8_t* data = (uint8_t*)std::malloc(32);
     if(hex_string_to_buffer(sv, data)){
       return data;
     }else{
