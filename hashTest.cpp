@@ -20,6 +20,143 @@
 #include "goldilocks/ntt_goldilocks.hpp"
 
 
+uint8_t* hex_str_to_uint8(const char* string) {
+
+    if (string == NULL)
+        return NULL;
+
+    size_t slength = std::strlen(string);
+    if (slength != 64) // must be even
+        return NULL;
+
+    size_t dlength = slength / 2;
+
+    uint8_t* data = (uint8_t*)std::malloc(dlength);
+
+    std::memset(data, 0, dlength);
+
+    size_t index = 0;
+    while (index < slength) {
+        char c = string[index];
+        int value = 0;
+        if (c >= '0' && c <= '9')
+            value = (c - '0');
+        else if (c >= 'A' && c <= 'F')
+            value = (10 + (c - 'A'));
+        else if (c >= 'a' && c <= 'f')
+            value = (10 + (c - 'a'));
+        else
+            return NULL;
+
+        data[(index / 2)] += value << (((index + 1) % 2) * 4);
+
+        index++;
+    }
+
+    return data;
+}
+void hash_two_to_one(const uint8_t * input_a,const  uint_t * input_b, uint8_t * output){
+
+
+  Goldilocks::Element output[4];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+8] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash(output, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(output[i]);
+  }
+   std::memcpy(output, &output_data[0], 32);
+}
+void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * output){
+
+  const uint8_t * input_a = hex_str_to_uint8(a);
+  if(input_a == NULL){
+    throw std::runtime_error("invalid hex string key!");
+  }
+  const uint8_t * input_b = hex_str_to_uint8(a);
+  if(input_b == NULL){
+    free(input_a);
+    throw std::runtime_error("invalid hex string key!");
+  }
+  hash_two_to_one(input_a, input_b, output)
+
+  Goldilocks::Element output[4];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  free(input_a);
+  free(input_b);
+  for(int i=0;i<4;i++){
+    input[i+8] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash(output, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(output[i]);
+  }
+   std::memcpy(output, &output_data[0], 32);
+}
+
+/*
+class Hash {
+  public:
+    Hash(size_t outputSize_) : outputSize(outputSize_) {
+        blake2s_init(&s, outputSize);
+    }
+
+    void update(std::string_view sv) {
+        if sv.length() == 32 {
+        update(&s, reinterpret_cast<const uint8_t*>(sv.data()));
+        }else if sv.length() == 64{
+            const uint_8_t * data = hex_str_to_uint8(reinterpret_cast<const char*>(sv.data()));
+            update(data, 32);
+            free(data);
+        }else{
+            throw std::runtime_error("invalid string key");
+        }
+    }
+
+    void update(const uint8_t *input, size_t length) {
+        blake2s_update(&s, input, length);
+    }
+
+    void final(uint8_t *output) {
+        blake2s_final(&s, output, outputSize);
+    }
+
+  private:
+    blake2s_state s;
+    size_t outputSize;
+
+};
+*/
+constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+std::string hexStr(unsigned uint8_t *data, int len)
+{
+  std::string s(len * 2, ' ');
+  for (int i = 0; i < len; ++i) {
+    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
+    s[2 * i + 1] = hexmap[data[i] & 0x0F];
+  }
+  return s;
+}
 namespace quadrable {
 void testPoseidon() {
 
@@ -40,8 +177,15 @@ void testPoseidon() {
     input[4] = Goldilocks::fromU64(2);
     PoseidonGoldilocks::hash(output, input);
     for(int i=0;i<4;i++){
-      std::cout << "result" << Goldilocks::toString(output[i]) << "\n";
+      std::cout << "h1 result: " << Goldilocks::toString(output[i]) << "\n";
     }
+    uint8_t test_out[32];
+    hash_hex_two_to_one("442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", &test_out[0]);
+    std::cout << "hex result: " << hexStr(&test_out[0], 32) << "\n";
+
+
+
+    
 
 }
 
