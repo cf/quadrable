@@ -21,15 +21,18 @@
 
 
 
-uint8_t* hex_string_to_buffer(std::string_view sv) {
+char * hex_string_to_buffer_alloc(std::string_view sv) {
+    char* data = (char*)std::malloc(32);
+    hex_string_to_buffer(sv, data)
+
+    return data;
+}
+void hex_string_to_buffer(std::string_view sv, const char * data) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
         return NULL;
 
     size_t dlength = slength / 2;
-
-    uint8_t* data = (uint8_t*)std::malloc(dlength);
-
     std::memset(data, 0, dlength);
     const char * str_data = sv.data();
 
@@ -50,8 +53,6 @@ uint8_t* hex_string_to_buffer(std::string_view sv) {
 
         index++;
     }
-
-    return data;
 }
 constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -102,6 +103,46 @@ class Hash {
 namespace quadrable {
 
 void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
+  const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
+  const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
+  
+
+
+  Goldilocks::Element output[4];
+  Goldilocks::Element input[12];
+  for(int i=0;i<4;i++){
+    input[i] =  Goldilocks::fromU64(input_a[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+4] =  Goldilocks::fromU64(input_b[i]);
+  }
+  for(int i=0;i<4;i++){
+    input[i+8] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash(output, input);
+  uint64_t output_data[4];
+
+  for(int i=0;i<4;i++){
+    output_data[i] = Goldilocks::toU64(output[i]);
+  }
+   std::memcpy(result, &output_data[0], 32);
+}
+void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * result){
+
+  uint8_t * input_a = hex_string_to_buffer_alloc(a);
+  if(input_a == NULL){
+    throw std::runtime_error("invalid hex string key!");
+  }
+  uint8_t * input_b = hex_string_to_buffer_alloc(b);
+  if(input_b == NULL){
+    free(input_a);
+    throw std::runtime_error("invalid hex string key!");
+  }
+  hash_two_to_one(input_a, input_b, result);
+  free(input_a);
+  free(input_b);
+}
+void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
   const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
   
