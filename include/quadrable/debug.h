@@ -74,7 +74,7 @@ inline void dumpDbAuxHex(quadrable::Quadrable &db, lmdb::txn &txn, uint64_t node
 
     std::cout << std::string(depth*2, ' '); 
 
-    std::cout << renderNode(db, txn, node, 8) << " ";
+    std::cout << renderNode(db, txn, node, 0) << " ";
 
     if (node.nodeType == quadrable::NodeType::Empty) {
         std::cout << "empty";
