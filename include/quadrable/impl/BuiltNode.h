@@ -95,10 +95,12 @@ class BuiltNode {
         BuiltNode output;
 
         {
+            /*
             Hash h(sizeof(output.nodeHash.data));
             h.update(leftNode.nodeHash.data, sizeof(leftNode.nodeHash.data));
             h.update(rightNode.nodeHash.data, sizeof(rightNode.nodeHash.data));
-            h.final(output.nodeHash.data);
+            h.final(output.nodeHash.data);*/
+            hash_two_to_one(leftNode.nodeHash.data, rightNode.nodeHash.data, output.nodeHash.data);
         }
 
         std::string nodeRaw;
