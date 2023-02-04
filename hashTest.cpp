@@ -11,12 +11,24 @@
 #include "quadrable/transport.h"
 #include "quadrable/debug.h"
 
+#include "goldilocks/goldilocks_base_field.hpp"
 
 
 
 namespace quadrable {
+void testPoseidon() {
+
+    Goldilocks::Element a = Goldilocks::fromU64(0xFFFFFFFF00000005ULL);
+    uint64_t b = Goldilocks::toU64(a);
+    Goldilocks::Element c = Goldilocks::fromString("6277101731002175852863927769280199145829365870197997568000");
+
+    std::cout << Goldilocks::toString(a) << " " << b << " " << Goldilocks::toString(c) << "\n";
+
+}
 
 void doIt() {
+  testPoseidon();
+  
     ::system("mkdir -p testdb/ ; rm testdb/*.mdb");
     std::string dbDir = "testdb/";
 
