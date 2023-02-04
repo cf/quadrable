@@ -142,7 +142,7 @@ class Key {
         Key k;
 
         {
-            if(hex_string_to_buffer())
+            //if(hex_string_to_buffer())
             Hash h(sizeof(k.data));
             h.update(s);
             h.final(k.data);
