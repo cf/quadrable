@@ -21,7 +21,7 @@
 
 
 
-uint8_t* hex_string_to_buffer(std::string_view sv,) {
+uint8_t* hex_string_to_buffer(std::string_view sv) {
     size_t slength = sv.length();
     if (slength != 64) // must be even
         return NULL;
