@@ -2,6 +2,7 @@
 
 #include "blake2.h"
 
+
 #include "../../goldilocks/goldilocks_base_field.hpp"
 
 #include "../../goldilocks/goldilocks_base_field.hpp"
@@ -17,6 +18,7 @@ namespace quadrable {
 
 bool hex_string_to_buffer(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
+    std::cout << "length: " << slength << "\n";
     if (slength > 64 || (slength&1)==1) // must be even
         return false;
 
@@ -106,7 +108,6 @@ void hash_two_to_one_leaf(const uint8_t * a,const  uint8_t * b, uint8_t * result
   }
    std::memcpy(result, &output_data[0], 32);
 }
-
 class Hash {
   public:
     Hash(size_t outputSize_) : outputSize(outputSize_) {
@@ -141,10 +142,10 @@ class Key {
         Key k;
 
         {
-            if(!hex_string_to_buffer(s, k.data)){
-                
-                throw quaderr("invalid value for key");
-            }
+            if(hex_string_to_buffer())
+            Hash h(sizeof(k.data));
+            h.update(s);
+            h.final(k.data);
         }
 
         return k;
