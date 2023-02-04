@@ -38,7 +38,7 @@ void testPoseidon() {
     }
     input[0] = Goldilocks::fromU64(1);
     input[4] = Goldilocks::fromU64(2);
-    PoseidonGoldilocks::hash(&output, &input);
+    PoseidonGoldilocks::hash(output, &input);
     for(int i=0;i<4;i++){
       std::cout << "result" << Goldilocks::toString(output[i]) << "\n";
     }
