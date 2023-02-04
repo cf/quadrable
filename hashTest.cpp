@@ -23,7 +23,6 @@
 
 bool hex_string_to_buffer_b(std::string_view sv, uint8_t * data) {
     size_t slength = sv.length();
-    std::cout << "length: " << slength << "\n";
     if (slength != 64) // must be even
         return false;
 
@@ -198,6 +197,37 @@ void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_
   hash_two_to_one_b_with_pad(input_a, input_b, result);
   free(input_a);
   free(input_b);
+}
+void testTree(size_t n) {
+    ::system("mkdir -p testdb_testtree/ ; rm testdb_testtree/*.mdb");
+    std::string dbDir = "testdb_testtree/";
+
+
+    lmdb::env lmdb_env = lmdb::env::create();
+
+    lmdb_env.set_max_dbs(64);
+    lmdb_env.set_mapsize(1UL * 1024UL * 1024UL * 1024UL * 1024UL);
+
+    lmdb_env.open(dbDir.c_str(), MDB_CREATE, 0664);
+
+    lmdb_env.reader_check();
+
+    quadrable::Quadrable db;
+
+    {
+        auto txn = lmdb::txn::begin(lmdb_env, nullptr, 0);
+        db.init(txn);
+        txn.commit();
+    }
+
+    auto txn = lmdb::txn::begin(lmdb_env, nullptr, 0);
+    auto changes = db.change();
+    changes.putHex("0000000000000000000000000000000000000000000000000000000000000000", "0100000000000000020000000000000003000000000000000400000000000000");
+
+    changes.apply(txn);
+
+    txn.commit();
+
 }
 void testPoseidon() {
 

@@ -1,3 +1,32 @@
+
+bool hex_string_to_buffer_c(std::string_view sv, uint8_t * data) {
+    size_t slength = sv.length();
+    if (slength != 64) // must be even
+        return false;
+
+    size_t dlength = slength / 2;
+    std::memset(data, 0, dlength);
+    const char * str_data = sv.data();
+
+    size_t index = 0;
+    while (index < slength) {
+        char c = str_data[index];
+        int value = 0;
+        if (c >= '0' && c <= '9')
+            value = (c - '0');
+        else if (c >= 'A' && c <= 'F')
+            value = (10 + (c - 'A'));
+        else if (c >= 'a' && c <= 'f')
+            value = (10 + (c - 'a'));
+        else
+            return false;
+
+        data[(index / 2)] += value << (((index + 1) % 2) * 4);
+
+        index++;
+    }
+    return true;
+}
 public:
 
 class UpdateSet {
@@ -18,6 +47,24 @@ class UpdateSet {
 
     UpdateSet &put(const Key &keyRaw, std::string_view val, uint64_t *outputNodeId = nullptr) {
         map.insert_or_assign(keyRaw, Update{"", std::string(val), false, outputNodeId});
+        return *this;
+    }
+    UpdateSet &put(uint64_t key, uint8_t * value, uint64_t *outputNodeId = nullptr) {
+        map.insert_or_assign(Key::fromUint64(key), Update{"", std::string((const char *)value, 32), false, outputNodeId});
+        return *this;
+    }
+    UpdateSet &putBytes(uint8_t * key, uint8_t * value, uint64_t *outputNodeId = nullptr) {
+        map.insert_or_assign(Key::fromBytes(k), Update{"", std::string((const char *)value, 32), false, outputNodeId});
+        return *this;
+    }
+    UpdateSet &putHex(std::string_view key, std::string_view value, uint64_t *outputNodeId = nullptr) {
+        auto k = Key::fromUint64(0);
+
+        hex_string_to_buffer_c(key, k.data);
+        uint8_t v[32];
+        hex_string_to_buffer_c(value, (uint8_t *)&v[0]);
+
+        map.insert_or_assign(k, Update{"", std::string((const char *)(&v[0]), 32), false, outputNodeId});
         return *this;
     }
 

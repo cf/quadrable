@@ -25,6 +25,7 @@ R"(
     Usage:
       quadb [options] init
       quadb [options] put [--int] [--] <key> <val>
+      quadb [options] putHex [--] <key> <val>
       quadb [options] del [--int] [--] <key>
       quadb [options] get [--int] [--] <key>
       quadb [options] length
@@ -170,6 +171,16 @@ void run(int argc, char **argv) {
 
         if (args["--int"].asBool()) changes.put(quadrable::Key::fromInteger(std::stoull(k)), v);
         else changes.put(k, v);
+
+        changes.apply(txn);
+    } else if (args["putHex"].asBool()) {
+
+        std::string k = args["<key>"].asString();
+        std::string v = args["<val>"].asString();
+
+        auto changes = db.change();
+
+        changes.putHex(k, v);
 
         changes.apply(txn);
     } else if (args["del"].asBool()) {

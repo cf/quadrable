@@ -155,6 +155,32 @@ class Key {
         return k;
     }
 
+    static Key fromUint64(uint64_t x) {
+        Key k;
+
+        {
+            std::memset(k.data, 0, sizeof(k.data));
+            *((uint64_t *)k.data) = x;
+        }
+
+        return k;
+    }
+    static Key fromBytes(uint8_t * x, size_t length) {
+        Key k;
+
+
+        if (length > sizeof(h.data)){
+            throw quaderr("size to large for length");
+        }
+
+        {
+            std::memset(k.data, 0, sizeof(k.data));
+            std::memcpy(k.data, x, length);
+        }
+
+        return k;
+    }
+
     static Key existing(std::string_view s) {
         Key h;
 
