@@ -20,12 +20,12 @@
 #include "goldilocks/ntt_goldilocks.hpp"
 
 
-uint8_t* hex_str_to_uint8(const char* string) {
+
+uint8_t* hex_string_to_buffer(const char* string, size_t slength) {
 
     if (string == NULL)
         return NULL;
 
-    size_t slength = std::strlen(string);
     if (slength != 64) // must be even
         return NULL;
 
@@ -54,6 +54,18 @@ uint8_t* hex_str_to_uint8(const char* string) {
     }
 
     return data;
+}
+constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+std::string buffer_to_hex_string(uint8_t * data, int len)
+{
+  std::string s(len * 2, ' ');
+  for (int i = 0; i < len; ++i) {
+    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
+    s[2 * i + 1] = hexmap[data[i] & 0x0F];
+  }
+  return s;
 }
 
 /*
@@ -89,18 +101,6 @@ class Hash {
 
 };
 */
-constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-std::string hexStr(uint8_t * data, int len)
-{
-  std::string s(len * 2, ' ');
-  for (int i = 0; i < len; ++i) {
-    s[2 * i]     = hexmap[(data[i] & 0xF0) >> 4];
-    s[2 * i + 1] = hexmap[data[i] & 0x0F];
-  }
-  return s;
-}
 namespace quadrable {
 
 void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
@@ -130,11 +130,11 @@ void hash_two_to_one(const uint8_t * a,const  uint8_t * b, uint8_t * result){
 }
 void hash_hex_two_to_one(const char * a,const  char * b, uint8_t * result){
 
-  uint8_t * input_a = hex_str_to_uint8(a);
+  uint8_t * input_a = hex_string_to_buffer(a);
   if(input_a == NULL){
     throw std::runtime_error("invalid hex string key!");
   }
-  uint8_t * input_b = hex_str_to_uint8(a);
+  uint8_t * input_b = hex_string_to_buffer(a);
   if(input_b == NULL){
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
@@ -166,7 +166,7 @@ void testPoseidon() {
     }
     uint8_t test_out[32];
     hash_hex_two_to_one("442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5", &test_out[0]);
-    std::cout << "hex result: " << hexStr(&test_out[0], 32) << "\n";
+    std::cout << "hex result: " << buffer_to_hex_string(&test_out[0], 32) << "\n";
 
 
 
