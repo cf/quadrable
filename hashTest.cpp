@@ -149,10 +149,7 @@ void hash_hex_two_to_one(std::string_view a, std::string_view b, uint8_t * resul
 void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * result){
   const uint64_t * input_a =reinterpret_cast<const uint64_t*>(a);
   const uint64_t * input_b = reinterpret_cast<const uint64_t*>(b);
-  
-
-
-  Goldilocks::Element output[4];
+  Goldilocks::Element state[12];
   Goldilocks::Element input[12];
   for(int i=0;i<4;i++){
     input[i] =  Goldilocks::fromU64(input_a[i]);
@@ -160,14 +157,30 @@ void hash_two_to_one_with_pad(const uint8_t * a,const  uint8_t * b, uint8_t * re
   for(int i=0;i<4;i++){
     input[i+4] =  Goldilocks::fromU64(input_b[i]);
   }
-  for(int i=0;i<4;i++){
-    input[i+8] =  Goldilocks::fromU64(0);
+  
+  input[8] = Goldilocks::fromU64(0);
+  input[9] = Goldilocks::fromU64(0);
+  input[10] = Goldilocks::fromU64(0);
+  input[11] = Goldilocks::fromU64(0);
+  for(int i=0;i<12;i++){
+    state[i] =  Goldilocks::fromU64(0);
   }
-  PoseidonGoldilocks::hash(output, input);
+  PoseidonGoldilocks::hash_full_result_seq(state, input);
+  input[0] = Goldilocks::fromU64(1);
+  input[1] = Goldilocks::fromU64(1);
+  input[2] = Goldilocks::fromU64(0);
+  input[3] = Goldilocks::fromU64(1);
+  for(int i=4;i<12;i++){
+    input[i] = state[i];
+  }
+  for(int i=0;i<12;i++){
+    state[i] =  Goldilocks::fromU64(0);
+  }
+  PoseidonGoldilocks::hash_full_result_seq(state, input);
   uint64_t output_data[4];
 
   for(int i=0;i<4;i++){
-    output_data[i] = Goldilocks::toU64(output[i]);
+    output_data[i] = Goldilocks::toU64(state[i]);
   }
    std::memcpy(result, &output_data[0], 32);
 }
@@ -182,7 +195,7 @@ void hash_hex_two_to_one_with_pad(std::string_view a, std::string_view b, uint8_
     free(input_a);
     throw std::runtime_error("invalid hex string key!");
   }
-  hash_two_to_one(input_a, input_b, result);
+  hash_two_to_one_with_pad(input_a, input_b, result);
   free(input_a);
   free(input_b);
 }
@@ -212,6 +225,10 @@ void testPoseidon() {
     std::string_view hex_b { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f4" };
     hash_hex_two_to_one(hex_a, hex_b, &test_out[0]);
     std::cout << "hex result: " << buffer_to_hex_string(&test_out[0], 32) << "\n";
+    std::string_view hex_a_2 { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f5" };
+    std::string_view hex_b_2 { "442646061a92545147092c2e0db3c18c274d85bff37c7d1640a088afa0ea22f4" };
+    hash_hex_two_to_one_with_pad(hex_a_2, hex_b_2, &test_out[0]);
+    std::cout << "pad hex result: " << buffer_to_hex_string(&test_out[0], 32) << "\n";
 
 
 
